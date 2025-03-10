@@ -30,14 +30,16 @@ public class DeviceDataController {
             return ResponseEntity.ok(movementData);
         } catch (BusinessException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(500).body("An unexpected error occurred: " + ex.getMessage());
         }
     }
 
     @GetMapping("/info")
-    public ResponseEntity<DeviceInfoResponseDTO> getDeviceDataByIdAndDate(@RequestParam int id_device,@RequestParam String Date ) {
+    public ResponseEntity<?> getDeviceDataByIdAndDate(@RequestParam int id_device,@RequestParam String Date ) {
+        try {
         DeviceInfoResponseDTO deviceInfo = deviceDataService.getDeviceDataByIdAndDate(id_device, Date);
         return ResponseEntity.ok(deviceInfo);
+        } catch (BusinessException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }
