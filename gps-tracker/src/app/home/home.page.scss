@@ -1,0 +1,27 @@
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 100%; // Make sure ion-content can fill all available space
+  display: flex;        // Let content stretch
+  flex-direction: column;
+}
+
+
+#map {
+  height: 100%; /* Full viewport height */
+  flex: 1;              // Take remaining space
+  width: 100%;  /* Full width */
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+/* Optional: Center the map container if needed */
+.map-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

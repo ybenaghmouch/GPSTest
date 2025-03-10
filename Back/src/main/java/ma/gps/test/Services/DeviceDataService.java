@@ -33,7 +33,7 @@ public class DeviceDataService implements IDeviceDataService {
         MovementRequestDTO movementRequestDTO =new MovementRequestDTO();
         movementRequestDTO.setId_device(id_device);
         if (movementRequestDTO == null || movementRequestDTO.getId_device() <= 0) {
-            throw new BusinessException("Invalid request: Device ID is missing or invalid."+movementRequestDTO);
+            throw new BusinessException("Invalid request: Device ID is missing or invalid.");
         }
 
         try {

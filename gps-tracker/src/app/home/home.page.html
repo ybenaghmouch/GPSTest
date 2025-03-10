@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>GPS Tracker</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Device ID Input -->
+  <ion-item>
+    <ion-label position="stacked">Device ID</ion-label>
+    <ion-input
+      type="number"
+      [(ngModel)]="deviceId"
+      placeholder="Enter the device ID"
+    >
+    </ion-input>
+  </ion-item>
+
+  <!-- Button to load data -->
+  <ion-button expand="full" (click)="onLoadDeviceData()">
+    Load Data
+  </ion-button>
+
+  <!-- Map container -->
+  <div id="map"></div>
+</ion-content>
