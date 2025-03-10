@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { DeviceDataService } from '../services/device-data.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,9 @@ export class HomePage implements OnInit {
   // This property will be bound to the input in the template
   deviceId: number | null = null;
 
-  constructor(private deviceDataService: DeviceDataService) {}
+  constructor(private deviceDataService: DeviceDataService,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit(): void {
     delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -72,22 +75,38 @@ export class HomePage implements OnInit {
   }
 
   private loadMovementData(id_device: number): void {
-    // Fetch data from the service
-    this.deviceDataService.getMovementByIdDevice(id_device).subscribe((data) => {
-      const coordinates: L.LatLngTuple[] = data.map((point: any) => [
-        point.latitude,
-        point.longitude
-      ]);
-
-      // Draw a polyline for all the coordinates
-      const polyline = L.polyline(coordinates, { color: 'blue' }).addTo(this.map);
-
-      // Re-center and re-zoom the map to fit the new route
-      this.map.fitBounds(polyline.getBounds());
-
-      // Marker animation
-      this.animateMarker(coordinates);
+    this.deviceDataService.getMovementByIdDevice(id_device).subscribe({
+      next: (data) => {
+        const coordinates: L.LatLngTuple[] = data.map((point: any) => [
+          point.latitude,
+          point.longitude
+        ]);
+        const polyline = L.polyline(coordinates, { color: 'blue' }).addTo(this.map);
+        this.map.fitBounds(polyline.getBounds());
+        this.animateMarker(coordinates);
+      },
+      error: (err) => {
+        // Check the status code and present the appropriate alert
+        if (err.status >= 500) {
+          // Server error
+          this.presentAlert('Server Error!', 'Something went wrong on the server');
+        } else if (err.status >= 400 && err.status < 500) {
+          // 4xx error (e.g., ID not found)
+          this.presentAlert('Invalid ID', 'This device ID does not exist');
+        } else {
+          // Any other type of error
+          this.presentAlert('Error', 'An unexpected error occurred');
+        }
+      }
     });
+  }
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
   private animateMarker(coordinates: L.LatLngTuple[]): void {

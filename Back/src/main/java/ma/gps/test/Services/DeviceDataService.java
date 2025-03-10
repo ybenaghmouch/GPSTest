@@ -8,6 +8,7 @@ import ma.gps.test.DTO.MovementRequestDTO;
 import ma.gps.test.DTO.MovementResponseDTO;
 import ma.gps.test.Services.Exeptions.BusinessException;
 import ma.gps.test.Services.Exeptions.DeviceDataNotFoundException;
+import ma.gps.test.Services.Exeptions.DeviceNotFoundException;
 import ma.gps.test.Services.Exeptions.ServiceException;
 import ma.gps.test.Services.Models.DeviceData;
 import org.modelmapper.ModelMapper;
@@ -36,18 +37,16 @@ public class DeviceDataService implements IDeviceDataService {
             throw new BusinessException("Invalid request: Device ID is missing or invalid.");
         }
 
-        try {
+        
             List<DeviceData> deviceDataList = deviceDataRepository.findById_Id_deviceOrderById_DateAsc(movementRequestDTO.getId_device());
 
             if (deviceDataList.isEmpty()) {
-                throw new DeviceDataNotFoundException("Device with ID " + movementRequestDTO.getId_device() + " not found.");
+                throw new DeviceNotFoundException("Device with ID " + movementRequestDTO.getId_device() + " not found.");
             }
             return deviceDataList.stream()
                     .map(data -> modelMapper.map(data, MovementResponseDTO.class))
                     .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new ServiceException("An error occurred while fetching device movement data. ", e);
-        }
+
     }
 
     @Override

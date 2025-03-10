@@ -28,7 +28,9 @@ public class DeviceDataController {
         try {
             List<MovementResponseDTO> movementData = deviceDataService.getMovementByIdDevice(id_device);
             return ResponseEntity.ok(movementData);
-        } catch (BusinessException ex) {
+        } catch (DeviceNotFoundException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }catch (BusinessException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
