@@ -13,7 +13,7 @@ import { AlertController } from '@ionic/angular';
 export class HomePage implements OnInit {
   
   private map!: L.Map;
-  // This property will be bound to the input in the template
+  
   deviceId: number | null = null;
 
   constructor(private deviceDataService: DeviceDataService,
@@ -67,7 +67,6 @@ export class HomePage implements OnInit {
     }, 0);
   }
 
-  // Called when the user clicks "Load Data"
   onLoadDeviceData(): void {
     if (this.deviceId) {
       this.loadMovementData(this.deviceId);
@@ -86,15 +85,13 @@ export class HomePage implements OnInit {
         this.animateMarker(coordinates);
       },
       error: (err) => {
-        // Check the status code and present the appropriate alert
         if (err.status >= 500) {
           // Server error
           this.presentAlert('Server Error!', 'Something went wrong on the server');
         } else if (err.status >= 400 && err.status < 500) {
-          // 4xx error (e.g., ID not found)
+          // ID not found
           this.presentAlert('Invalid ID', 'This device ID does not exist');
         } else {
-          // Any other type of error
           this.presentAlert('Error', 'An unexpected error occurred');
         }
       }
@@ -110,7 +107,7 @@ export class HomePage implements OnInit {
   }
 
   private animateMarker(coordinates: L.LatLngTuple[]): void {
-    // Place the marker at the first coordinate
+    
     const marker = L.marker(coordinates[0]).addTo(this.map);
     let index = 0;
 
@@ -121,10 +118,10 @@ export class HomePage implements OnInit {
       }
       index++;
 
-      // Move the marker to the new coordinate
+      
       marker.setLatLng(coordinates[index]);
 
-      // Optional: show a popup on each step
+      // show a popup on each step
       marker
         .bindPopup(
           `Point ${index + 1}: Latitude ${coordinates[index][0]}, Longitude ${
